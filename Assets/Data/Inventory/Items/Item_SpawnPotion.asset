@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a3237fcf2e546b19b856ba23e5e6739, type: 3}
+  m_Name: Item_SpawnPotion
+  m_EditorClassIdentifier: 
+  _name: Potion Of Abundance
+  _icon: {fileID: 1891082786, guid: 78c5950bf2387a84ab6c3298ae6d505a, type: 3}
+  _tier: {fileID: 11400000, guid: 3b4c8849830b3f3459f3f29bb1c62799, type: 2}
+  _itemType: 3
+  _description: Makes the chest cooldown shorter for 1 minute
+  _bonuses:
+  - {fileID: 11400000, guid: 67fdeaf9da653a04c9a090715d8c8bee, type: 2}
