@@ -1,8 +1,9 @@
-namespace Diablo5
+namespace InventorySandbox.Interactables
 {
 
+	using InventorySystem;
+	using XomracCore.TimeManagement;
 	using System.Collections;
-	using Characters;
 	using InventorySystem.Items;
 	using UnityEngine;
 	using XomracCore.Patterns.SL;
@@ -13,7 +14,7 @@ namespace Diablo5
 		[SerializeField] private float _baseCooldownDuration = 10f;
 		public float BaseCooldownDuration => _baseCooldownDuration;
 		[SerializeField] private Item[] _droppableItems;
-		[SerializeField] private CooldownDisplayer _cooldownDisplayer;
+		[SerializeField] private TimerDisplayer _cooldownDisplayer;
 
 		private float _cooldownDuration;
 		private Timer _currentCooldown;
@@ -39,14 +40,6 @@ namespace Diablo5
 			}
 		}
 
-		private void OnDestroy()
-		{
-			if (ServiceLocator.Global.TryGetService(out GameStateManager gameStateManager))
-			{
-				gameStateManager.GameStateChanged -= OnGameStateChanged;
-			}
-		}
-
 		public void ChangeCooldownDuration(float duration)
 		{
 			_cooldownDuration = duration;
@@ -65,7 +58,7 @@ namespace Diablo5
 			{
 				inventory.Inventory.TryAddItem(droppedItem);
 			}
-			
+
 			_chestAnimator.SetTrigger(Open);
 			LoseFocus();
 			RestartCooldown();

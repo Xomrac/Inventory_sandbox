@@ -1,4 +1,4 @@
-﻿namespace Diablo5.InventorySystem.Items
+﻿namespace InventorySandbox.InventorySystem.Items
 {
 	public enum ItemType
 	{

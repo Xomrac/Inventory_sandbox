@@ -41,15 +41,15 @@ namespace XomracCore.Patterns.SL
 			get{
 				if (_instance != null) return _instance;
 
-				var globalServiceLocator = FindFirstObjectByType<ServiceLocatorGlobalBootstrap>();
+				var globalServiceLocator = FindFirstObjectByType<ServiceLocatorGlobalInitializer>();
 				if (globalServiceLocator != null)
 				{
-					globalServiceLocator.BootstrapOnDemand();
+					globalServiceLocator.InitializeOnDemand();
 					return _instance;
 				}
-				
+				Debug.LogWarning("No global ServiceLocator found, creating new one. Check if you really want this.");
 				var container = new GameObject("===GLOBAL SERVICE LOCATOR===", typeof(ServiceLocator));
-				container.AddComponent<ServiceLocatorGlobalBootstrap>().BootstrapOnDemand();
+				container.AddComponent<ServiceLocatorGlobalInitializer>().InitializeOnDemand();
 
 				return _instance;
 			}

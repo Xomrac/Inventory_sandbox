@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _duration: 10
   _icon: {fileID: -1894690614, guid: 78c5950bf2387a84ab6c3298ae6d505a, type: 3}
-  _bonusAmount: 3
+  _bonusAmount: 2

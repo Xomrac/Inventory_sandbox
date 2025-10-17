@@ -1,6 +1,6 @@
 namespace XomracCore.Characters.PlayerCharacter
 		{
-		    using Diablo5;
+		    using InventorySandbox;
 		    using Patterns.SL;
 		    using UnityEngine;
 		    using UnityEngine.InputSystem;
@@ -40,17 +40,9 @@ namespace XomracCore.Characters.PlayerCharacter
 		            Move();
 		            Rotate();
 		        }
-				
-		        private void OnDestroy()
-		        {
-		            _moveAction.action.performed -= OnMove;
-		            _moveAction.action.canceled -= OnMovementCanceled;
-		        }
-		
 
 		        private void OnMovementCanceled(InputAction.CallbackContext _)
 		        {
-		            Debug.Log("Movement Canceled");
 		            Stop();
 		        }
 				

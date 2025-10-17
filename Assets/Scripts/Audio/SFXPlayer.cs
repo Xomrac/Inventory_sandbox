@@ -1,8 +1,6 @@
-﻿using UnityEngine.Audio;
-
-namespace XomracCore.Audio
+﻿namespace XomracCore.Audio
 {
-
+	using UnityEngine.Audio;
 	using System.Collections;
 	using UnityEngine;
 	using UnityEngine.Pool;
@@ -31,6 +29,7 @@ namespace XomracCore.Audio
 			_audioSource.PlayOneShot(clip);
 			StartCoroutine(WaitAndRelease());
 		}
+
 		public void PlaySFX(AudioResource audioResource)
 		{
 			_audioSource.resource = audioResource;
@@ -43,7 +42,7 @@ namespace XomracCore.Audio
 			yield return new WaitUntil(() => !_audioSource.isPlaying);
 			_pool.Release(this);
 		}
-		
+
 		//Pooling system implementations
 
 		public void Initialize<T>(ObjectPool<T> pool) where T : MonoBehaviour

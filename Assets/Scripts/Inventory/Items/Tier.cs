@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Diablo5.InventorySystem.Items
+namespace InventorySandbox.InventorySystem.Items
 {
 
-	[CreateAssetMenu(fileName = "NewTier", menuName = "Diablo5/Items/New Tier")]
+	[CreateAssetMenu(fileName = "NewTier", menuName = "InventorySandbox/Items/New Tier")]
 	public class Tier : ScriptableObject
 	{
 		[SerializeField] private string _name;

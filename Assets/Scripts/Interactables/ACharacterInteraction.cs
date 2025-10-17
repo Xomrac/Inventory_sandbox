@@ -1,10 +1,7 @@
-﻿using UnityEngine;
-
-namespace Diablo5
+﻿namespace InventorySandbox.Interactables
 {
+	using UnityEngine;
 
-	public abstract class ACharacterInteraction : MonoBehaviour
-	{
-	}
+	public abstract class ACharacterInteraction : MonoBehaviour { }
 
 }

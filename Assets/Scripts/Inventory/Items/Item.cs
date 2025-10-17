@@ -1,12 +1,12 @@
 ﻿using System;
-using Diablo5.Bonuses;
+using InventorySandbox.Buffs;
 using UnityEngine;
 using XomracCore.Patterns.SL;
 
-namespace Diablo5.InventorySystem.Items
+namespace InventorySandbox.InventorySystem.Items
 {
 
-	[CreateAssetMenu(fileName = "NewItem", menuName = "Diablo5/Items/New Item")]
+	[CreateAssetMenu(fileName = "NewItem", menuName = "InventorySandbox/Items/New Item")]
 	public class Item : ScriptableObject
 	{
 		[SerializeField] private string _name;
@@ -24,25 +24,23 @@ namespace Diablo5.InventorySystem.Items
 		[SerializeField, TextArea(3, 3)] private string _description;
 		public string Description => _description;
 
-		[SerializeField] private ABonusData[] _bonuses = Array.Empty<ABonusData>();
-		public ABonusData[] Bonuses => _bonuses;
+		[SerializeField] private ABuffData[] _buffs = Array.Empty<ABuffData>();
+		public ABuffData[] Buffs => _buffs;
 
 		public void Use()
 		{
-			Debug.Log($"Using item: {Name}");
-			if (_bonuses.Length == 0) return;
-
-			foreach (var bonus in _bonuses)
+			if (_buffs.Length == 0) return;
+			var manager = ServiceLocator.Global.GetService<BuffsManager>();
+			if (manager == null)
 			{
-				if (ServiceLocator.Global.TryGetService(out BonusManager manager))
-				{
-					manager.ResolveBonus(bonus);
-				}
-				else
-				{
-					Debug.LogWarning("No BonusManager found in the scene.");
-				}
+				Debug.LogWarning("No BonusManager found in the scene.");
+				return;
+			}
+			foreach (ABuffData buff in _buffs)
+			{
+				manager.ResolveBonus(buff);
 			}
 		}
 	}
+
 }

@@ -17,5 +17,5 @@ MonoBehaviour:
   _tier: {fileID: 11400000, guid: 3b4c8849830b3f3459f3f29bb1c62799, type: 2}
   _itemType: 3
   _description: Makes you run faster for 1 minute
-  _bonuses:
+  _buffs:
   - {fileID: 11400000, guid: 7a96bbc742f09004aa653490f67ed97e, type: 2}

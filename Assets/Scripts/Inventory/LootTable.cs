@@ -1,7 +1,6 @@
-﻿
-
-namespace Diablo5
+﻿namespace InventorySandbox
 {
+
 	using System.Collections.Generic;
 	using System.Linq;
 	using InventorySystem.Items;

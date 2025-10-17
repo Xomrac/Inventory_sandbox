@@ -1,20 +1,16 @@
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using XomracCore.Bootstrap;
 using XomracCore.Patterns.SL;
 
-namespace Diablo5
+namespace InventorySandbox
 {
-
-	public enum GameStates
+	/// <summary>
+	/// System to manage the current game state and notify listeners of state changes.
+	/// </summary>
+	public class GameStateManager : MonoBehaviour, IBootstrappable
 	{
-		Gameplay,
-		Inventory,
-		Paused
-	}
-
-	public class GameStateManager : MonoBehaviour
-	{
-
 		public event Action<GameStates> GameStateChanged;
 
 		private GameStates _currentState = GameStates.Gameplay;
@@ -27,16 +23,17 @@ namespace Diablo5
 				GameStateChanged?.Invoke(_currentState);
 			}
 		}
-		
-		void Awake()
+
+		public async UniTask Bootstrap()
 		{
 			ServiceLocator.Global.AddService(this);
+			await UniTask.Yield();
 		}
-		
+
 		public void SetState(GameStates newState)
 		{
 			CurrentState = newState;
 		}
-		
 	}
+
 }

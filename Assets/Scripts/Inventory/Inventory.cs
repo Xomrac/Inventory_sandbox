@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Diablo5.InventorySystem.Items;
-using UnityEngine;
-
-namespace Diablo5.InventorySystem
+﻿namespace InventorySandbox.InventorySystem
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using Items;
+	using UnityEngine;
 
+	/// <summary>
+	/// Represents a stack of items in the inventory, including the quantity and the slot index.
+	/// </summary>
 	public struct ItemStack
 	{
 		public int Quantity;
@@ -19,18 +21,43 @@ namespace Diablo5.InventorySystem
 		}
 	}
 
+	/// <summary>
+	/// Represents an inventory system that manages items and their stacks.
+	/// </summary>
 	public class Inventory
 	{
+		/// <summary>
+		/// The maximum capacity of unique items in the inventory.
+		/// </summary>
 		private int _capacity = 20;
+
 		public int Capacity => _capacity;
 
+		/// <summary>
+		/// A dictionary storing items and their corresponding stacks.
+		/// </summary>
 		private Dictionary<Item, ItemStack> _items;
+
 		public Dictionary<Item, ItemStack> Items => _items;
 
+		/// <summary>
+		/// Event triggered when the inventory changes.
+		/// </summary>
 		public event Action InventoryChanged;
-		public event Action<Item> ItemAdded; 
 
+		/// <summary>
+		/// Event triggered when an item is added to the inventory.
+		/// </summary>
+		public event Action<Item> ItemAdded;
+
+		/// <summary>
+		/// Gets the total count of items in the inventory.
+		/// </summary>
 		public int ItemCount => _items.Values.Sum(stack => stack.Quantity);
+
+		/// <summary>
+		/// Gets the count of unique items in the inventory.
+		/// </summary>
 		public int UniqueItemCount => _items.Count;
 
 		public Inventory(int capacity = 20, Dictionary<Item, ItemStack> items = null)
@@ -39,6 +66,13 @@ namespace Diablo5.InventorySystem
 			_items = items != null ? new Dictionary<Item, ItemStack>(items) : new Dictionary<Item, ItemStack>();
 		}
 
+		/// <summary>
+		/// Attempts to add an item to the inventory.
+		/// </summary>
+		/// <param name="item">The item to add.</param>
+		/// <param name="quantity">The quantity of the item to add.</param>
+		/// <param name="index">The slot index to place the item in.</param>
+		/// <returns>True if the item was added successfully; otherwise, false.</returns>
 		public bool TryAddItem(Item item, int quantity = 1, int index = -1)
 		{
 			if (ItemCount + quantity > Capacity)
@@ -71,21 +105,27 @@ namespace Diablo5.InventorySystem
 			return true;
 		}
 
-
+		/// <summary>
+		/// Swaps the slot indexes of two items in the inventory.
+		/// </summary>
+		/// <param name="a">The first item.</param>
+		/// <param name="b">The second item.</param>
 		public void SwapItemIndexes(Item a, Item b)
 		{
-			int aIndex = _items[a].slotIndex;
-			int bIndex = _items[b].slotIndex;
 			ItemStack aStack = _items[a];
 			ItemStack bStack = _items[b];
-			aStack.slotIndex = bIndex;
-			bStack.slotIndex = aIndex;
+			(aStack.slotIndex, bStack.slotIndex) = (bStack.slotIndex, aStack.slotIndex);
 			_items[a] = aStack;
 			_items[b] = bStack;
 			InventoryChanged?.Invoke();
 		}
-		
-		public void changeItemIndex(Item item, int newIndex)
+
+		/// <summary>
+		/// Changes the slot index of an item in the inventory.
+		/// </summary>
+		/// <param name="item">The item to move.</param>
+		/// <param name="newIndex">The new slot index for the item.</param>
+		public void ChangeItemIndex(Item item, int newIndex)
 		{
 			if (!_items.ContainsKey(item))
 			{
@@ -102,8 +142,11 @@ namespace Diablo5.InventorySystem
 			_items[item] = stack;
 			InventoryChanged?.Invoke();
 		}
-		
-		
+
+		/// <summary>
+		/// Gets the first available slot index in the inventory.
+		/// </summary>
+		/// <returns>The first available slot index, or -1 if none are available.</returns>
 		private int GetFirstAvailableIndex()
 		{
 			var occupiedIndexes = new List<int>(_items.Values.Select(stack => stack.slotIndex));
@@ -116,12 +159,22 @@ namespace Diablo5.InventorySystem
 			}
 			return -1;
 		}
-		
+
+		/// <summary>
+		/// Checks if a slot index is occupied.
+		/// </summary>
+		/// <param name="index">The slot index to check.</param>
+		/// <returns>True if the index is occupied; otherwise, false.</returns>
 		private bool IsIndexOccupied(int index)
 		{
 			return _items.Values.Any(stack => stack.slotIndex == index);
 		}
 
+		/// <summary>
+		/// Attempts to remove a unique item from the inventory.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
+		/// <returns>True if the item was removed successfully; otherwise, false.</returns>
 		public bool TryRemoveUniqueItem(Item item)
 		{
 			if (!_items.ContainsKey(item))
@@ -129,14 +182,17 @@ namespace Diablo5.InventorySystem
 				Debug.Log("Item not found in inventory");
 				return false;
 			}
-
-			int indexToRemove = _items[item].slotIndex;
 			_items.Remove(item);
-			ShiftSlotIndexes(indexToRemove + 1, -1);
 			InventoryChanged?.Invoke();
 			return true;
 		}
 
+		/// <summary>
+		/// Attempts to remove a specific quantity of an item from the inventory.
+		/// </summary>
+		/// <param name="item">The item to remove.</param>
+		/// <param name="quantity">The quantity to remove.</param>
+		/// <returns>True if the items were removed successfully; otherwise, false.</returns>
 		public bool TryRemoveItem(Item item, int quantity = 1)
 		{
 			if (!_items.ContainsKey(item))
@@ -155,8 +211,6 @@ namespace Diablo5.InventorySystem
 			stackData.Quantity -= quantity;
 			if (stackData.Quantity == 0)
 			{
-				int indexToRemove = stackData.slotIndex;
-				ShiftSlotIndexes(indexToRemove + 1, -1);
 				_items.Remove(item);
 			}
 			else
@@ -165,20 +219,6 @@ namespace Diablo5.InventorySystem
 			}
 			InventoryChanged?.Invoke();
 			return true;
-		}
-
-		public void ShiftSlotIndexes(int startingIndex, int shiftValue)
-		{
-			foreach (var key in _items.Keys.ToList())
-			{
-				ItemStack stackData = _items[key];
-				if (stackData.slotIndex >= startingIndex)
-				{
-					stackData.slotIndex += shiftValue;
-					_items[key] = stackData;
-				}
-			}
-			InventoryChanged?.Invoke();
 		}
 	}
 

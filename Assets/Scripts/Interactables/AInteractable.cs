@@ -1,8 +1,11 @@
-﻿namespace Diablo5
+﻿namespace InventorySandbox.Interactables
 {
-
 	using UnityEngine;
-
+	
+	/// <summary>
+	/// Base class for all interactable objects in the game.
+	/// Handles focus and interaction logic.
+	/// </summary>
 	public abstract class AInteractable : MonoBehaviour
 	{
 		[SerializeField] protected GameObject _affordanceCanvas;

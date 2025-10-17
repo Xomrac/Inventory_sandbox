@@ -1,12 +1,12 @@
-using System;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.InputSystem;
-using XomracCore.Patterns.SL;
-
-namespace Diablo5
+namespace InventorySandbox.Interactables
 {
-
+	using System.Collections;
+	using UnityEngine;
+	using UnityEngine.InputSystem;
+	using XomracCore.Patterns.SL;
+	/// <summary>
+	/// Handles player searching and interaction with interactable objects in the game world.
+	/// </summary>
 	public class PlayerInteraction : ACharacterInteraction
 	{
 		[SerializeField] private float _checkRate = 0.3f;
@@ -44,16 +44,7 @@ namespace Diablo5
 			_interactInputAction.action.Disable();
 			_currentInteractable?.LoseFocus();
 		}
-
-		private void OnDestroy()
-		{
-			if (ServiceLocator.Global.TryGetService(out GameStateManager gameStateManager))
-			{
-				gameStateManager.GameStateChanged -= OnGameStateChanged;
-			}
-			_interactInputAction.action.performed -= OnInteract;
-		}
-
+		
 		private void OnInteract(InputAction.CallbackContext _)
 		{
 			Interact();
@@ -79,6 +70,8 @@ namespace Diablo5
 			}
 		}
 
+		// Continuously searches for interactable objects within a specified radius at defined intervals.
+		// It's costly and useless to do it every frame.
 		private IEnumerator SearchInteractables()
 		{
 			while (true)

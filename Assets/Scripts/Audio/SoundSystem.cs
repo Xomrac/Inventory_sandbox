@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace XomracCore.Audio
 {
 
@@ -7,20 +5,25 @@ namespace XomracCore.Audio
 	using UnityEngine;
 	using UnityEngine.Pool;
 	using Patterns.SL;
+	using System.Collections.Generic;
+	using Cysharp.Threading.Tasks;
+	using Bootstrap;
 
-	public class SoundSystem : MonoBehaviour
+	public class SoundSystem : MonoBehaviour, IBootstrappable
 	{
 		[SerializeField] private int _maxSfxSources = 10;
 		[SerializeField] private bool _prewarmSfxPool = true;
 		[SerializeField] private SFXPlayer _sfxPlayerPrefab;
+
 		private ObjectPool<SFXPlayer> _sfxPool;
 		public ObjectPool<SFXPlayer> SfxPool => _sfxPool;
 
-		private void Awake()
+		public async UniTask Bootstrap()
 		{
 			ServiceLocator.Global.AddService(this);
 			SetupPool();
 			PreWarmPool();
+			await UniTask.Yield();
 		}
 
 		public void PlaySFX(AudioResource clip)
@@ -56,7 +59,7 @@ namespace XomracCore.Audio
 		private void PreWarmPool()
 		{
 			if (!_prewarmSfxPool) return;
-			
+
 			var prewarmedPlayers = new List<SFXPlayer>(_maxSfxSources);
 			for (int i = 0; i < _maxSfxSources; i++)
 			{
@@ -71,6 +74,7 @@ namespace XomracCore.Audio
 				_sfxPool.Release(sfxPlayer);
 			}
 		}
+
 	}
 
 }
